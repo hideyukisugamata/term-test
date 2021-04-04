@@ -1,49 +1,38 @@
 <template>
-<div id="app">
-  <div class="window">
-    <p>Todo List</p>
-    <div class="flex">
-      <input type="text" v-model="Newtodo"/>
-      <div class="add">
-        <button class="add-button">追加</button>
+  <div id="ListCompo">
+      <div class="List-component" v-for="(value,index) in Existing" :key="index">
+        <div class="flex">
+          <input 
+            type="text" 
+            class="list-input"
+            v-model="Existing">
+          <div class="list-button">
+            <div class="update">
+              <button class="update-button">更新</button>
+            </div>
+            <div class="delete">
+              <button class="delete-button">削除</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <list-compo/>
   </div>
-</div>
+  
 </template>
 
 <script>
-import ListCompo from '../components/ListCompo.vue';
-export default{
-  components:{
-    ListCompo
-  },
+export default {
   data(){
     return{
-      Newtodo:[]
+      Existing:[
+        "sample1","sample2","sample3"]
     }
   }
-};
+
+}
 </script>
 
-<style scoped>
-.window{
-  height:auto;
-  width:50%;
-  background: #FFFFFF;
-  padding:30px;
-  border-radius: 15px;
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-}
-.window p{
-  font-size:25px;
-  font-weight:bold;
-  margin-bottom: 15px;
-}
+<style>
 .flex,
 .list-button{
   display: flex;
@@ -71,19 +60,10 @@ button{
   cursor: pointer;
   transition: 1s;
 }
-.add,
 .update,
 .delete{
   margin: 2px 2px 2px 5px;
   height: 35px;
-}
-.add-button{
-  color:#f995f8;
-  border-color: #f995f8;
-}
-.add-button:hover{
-  background:#f995f8;
-  color:white;
 }
 .update-button{
   color: #ffbe6b;
@@ -101,5 +81,4 @@ button{
   background: #8dfcef;
   color: white;
 }
-
 </style>
