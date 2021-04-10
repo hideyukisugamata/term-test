@@ -3,9 +3,9 @@
   <div class="window">
     <p>Todo List</p>
     <div class="flex">
-      <input type="text" v-model="Newtodo"/>
+      <input type="text" v-model="Newlist"/>
       <div class="add">
-        <button class="add-button">追加</button>
+        <button class="add-button" @click="Newadd">追加</button>
       </div>
     </div>
     <list-compo/>
@@ -15,13 +15,29 @@
 
 <script>
 import ListCompo from '../components/ListCompo.vue';
+import axios from "axios";
 export default{
   components:{
     ListCompo
   },
   data(){
     return{
-      Newtodo:[]
+      Newlist:"",
+    };
+  },
+  methods:{
+    Newadd(){
+      axios
+        .post('https://arcane-temple-90375.herokuapp.com/api/todos',{
+          list:this.Newlist
+        })
+        .then(response=>{
+          console.log(response);
+          this.$router.go({
+            path: this.$router.currentRoute.path,
+            force: true,})
+          this.Newlist="";
+        })
     }
   }
 };

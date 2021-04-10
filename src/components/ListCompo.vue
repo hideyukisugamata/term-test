@@ -1,16 +1,17 @@
 <template>
   <div id="ListCompo">
-      <div class="List-component" v-for="(value,index) in Existing" :key="index">
+      <div class="List-component" v-for="(value,index) in ExistLists" :key="index">
         <div class="flex">
           <input 
             type="text" 
             class="list-input"
-            v-model="Existing">
+            v-model="value.data.list"
+            />
           <div class="list-button">
-            <div class="update">
+            <div class="update"  @click="Update(index)">
               <button class="update-button">更新</button>
             </div>
-            <div class="delete">
+            <div class="delete" @click="Delete(index)">
               <button class="delete-button">削除</button>
             </div>
           </div>
@@ -21,15 +22,62 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data(){
     return{
-      Existing:[
-        "sample1","sample2","sample3"]
+      ExistLists:[],
     }
-  }
+  },
+  methods:{
+    async GetLists(){
+      let data=[];
+      const ExistLists = await axios.get("https://arcane-temple-90375.herokuapp.com/api/todos");
+      for(let i = 0; i < ExistLists.data.data.length;i++){
+      await axios
+        .get("https://arcane-temple-90375.herokuapp.com/api/todos/" + ExistLists.data.data[i].id)
+        .then((response)=>{
+        data.push(response.data);
+        console.log(data[i].data.list);
+        })
+      }
+      this.ExistLists = data;
+      console.log(ExistLists);
+      
+      
+    },
+    async Update(index){
+      axios
+        .put("https://arcane-temple-90375.herokuapp.com/api/todos/"+this.ExistLists[index].data.id,{
+           list:this.ExistLists[index].data.list
+        })
+        .then((response)=>{
+          console.log(response);
+          this.$router.go({
+            path:this.$router.currentRoute.path,
+            force:true,
+          });
+        });
+    },
 
-}
+    Delete(index){
+      axios
+        .delete("https://arcane-temple-90375.herokuapp.com/api/todos/"+this.ExistLists[index].data.id)
+        .then((response)=>{
+          console.log(response);
+          this.$router.go({
+            path:this.$router.currentRoute.path,
+            force:true,
+          });
+        });
+    },
+
+  },
+  created(){
+    this.GetLists();
+  },
+  
+};
 </script>
 
 <style>
